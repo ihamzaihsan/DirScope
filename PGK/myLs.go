@@ -14,16 +14,11 @@ var (
 	MyLine []string
 )
 
-
-// ANSI color codes
+// ANSI escape codes for colors
 const (
-	Reset       = "\033[0m"
-	Blue        = "\033[34m"
-	Green       = "\033[32m"
-	Yellow      = "\033[33m"
-	Cyan        = "\033[36m" // For character devices
-	Purple      = "\033[35m" // For block devices
-	LightYellow = "\033[93m" // For sockets or pipes
+	Blue  = "\033[34m"
+	Green = "\033[32m"
+	Reset = "\033[0m"
 )
 
 // SortByModTime sorts files and folders by modification time, with the newest first.
@@ -58,12 +53,12 @@ func HandleLongListing(files []os.FileInfo, path string) {
 		return
 	}
 
-	// var num int64
+	var num int64
 
-	// for _, f := range files {
-	// 	stat := f.Sys().(*syscall.Stat_t)
-	// 	num = num + stat.Blocks
-	// }
+	for _, f := range files {
+		stat := f.Sys().(*syscall.Stat_t)
+		num = num + stat.Blocks
+	}
 
 	fmt.Println("total", totalBlocks)
 
@@ -211,92 +206,13 @@ func HandleReverse(files []os.FileInfo) {
 	}
 }
 
-// // printFileName prints the file name, coloring directories blue, .exe files green, and adding a backslash or asterisk at the end
-// func PrintFileName(file os.FileInfo) {
-// 	if file.IsDir() {
-// 		fmt.Printf("%s%s%s/%s  ", Blue, file.Name(), Reset, Reset)
-// 	} else if strings.HasSuffix(file.Name(), ".exe") {
-// 		fmt.Printf("%s%s%s*%s  ", Green, file.Name(), Reset, Reset)
-// 	} else {
-// 		fmt.Print(file.Name(), "  ")
-// 	}
-// }
-
-
-// func PrintFileName(file os.FileInfo) {
-// 	// Check if the file is a directory
-// 	if file.IsDir() {
-// 		fmt.Printf("%s%s%s/  ", Blue, file.Name(), Reset)
-// 	} else if file.Mode()&os.ModeSymlink != 0 {
-// 		// Check if the file is a symbolic link
-// 		fmt.Printf("%s%s%s@  ", Yellow, file.Name(), Reset)
-// 	} else if (file.Mode() & 0111) != 0 { // Check if the file is executable
-// 		fmt.Printf("%s%s%s*  ", Green, file.Name(), Reset)
-// 	} else {
-// 		// Print the file name without color
-// 		fmt.Print(file.Name(), "  ")
-// 	}
-// }
-
-// PrintFileName prints the file name with color based on its type
+// printFileName prints the file name, coloring directories blue, .exe files green, and adding a backslash or asterisk at the end
 func PrintFileName(file os.FileInfo) {
-	switch mode := file.Mode(); {
-	case mode.IsDir():
-		// Directory
-		fmt.Printf("%s%s%s/  ", Blue, file.Name(), Reset)
-	case mode&os.ModeSymlink != 0:
-		// Symbolic link
-		fmt.Printf("%s%s%s@  ", Cyan, file.Name(), Reset)
-	case mode&os.ModeNamedPipe != 0:
-		// Named pipe (FIFO)
-		fmt.Printf("%s%s%s|  ", LightYellow, file.Name(), Reset)
-	case mode&os.ModeSocket != 0:
-		// Socket
-		fmt.Printf("%s%s%s=  ", Yellow, file.Name(), Reset)
-	case mode&os.ModeDevice != 0:
-		if mode&os.ModeCharDevice != 0 {
-			// Character device
-			fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
-		} else {
-			// Block device
-			fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
-		}
-	case (mode & 0111) != 0:
-		// Executable file
-		fmt.Printf("%s%s%s*  ", Green, file.Name(), Reset)
-	default:
-		// Regular file
+	if file.IsDir() {
+		fmt.Printf("%s%s%s/%s  ", Blue, file.Name(), Reset, Reset)
+	} else if strings.HasSuffix(file.Name(), ".exe") {
+		fmt.Printf("%s%s%s*%s  ", Green, file.Name(), Reset, Reset)
+	} else {
 		fmt.Print(file.Name(), "  ")
 	}
 }
-
-// // PrintFileName prints the file name with color based on its type
-// func PrintFileName(file os.FileInfo, maxLen int) {
-// 	switch mode := file.Mode(); {
-// 	case mode.IsDir():
-// 		// Directory
-// 		fmt.Printf("%s%-*s/%s  ", Blue, maxLen, file.Name(), Reset)
-// 	case mode&os.ModeSymlink != 0:
-// 		// Symbolic link
-// 		fmt.Printf("%s%-*s@%s  ", Yellow, maxLen, file.Name(), Reset)
-// 	case mode&os.ModeNamedPipe != 0:
-// 		// Named pipe (FIFO)
-// 		fmt.Printf("%s%-*s|%s  ", LightYellow, maxLen, file.Name(), Reset)
-// 	case mode&os.ModeSocket != 0:
-// 		// Socket
-// 		fmt.Printf("%s%-*s=%s  ", LightYellow, maxLen, file.Name(), Reset)
-// 	case mode&os.ModeDevice != 0:
-// 		if mode&os.ModeCharDevice != 0:
-// 			// Character device
-// 			fmt.Printf("%s%-*s  %s", Cyan, maxLen, file.Name(), Reset)
-// 		} else {
-// 			// Block device
-// 			fmt.Printf("%s%-*s  %s", Purple, maxLen, file.Name(), Reset)
-// 		}
-// 	case (mode & 0111) != 0:
-// 		// Executable file
-// 		fmt.Printf("%s%-*s*%s  ", Green, maxLen, file.Name(), Reset)
-// 	default:
-// 		// Regular file
-// 		fmt.Printf("%-*s  ", maxLen, file.Name())
-// 	}
