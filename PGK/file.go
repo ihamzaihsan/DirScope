@@ -50,6 +50,9 @@ func PrintFiles(NewFileSlice []string, longListing, reverse, sortByTime bool) {
 	if longListing {
 		HandleLongListing(T, false)
 	}
+	for _, ok := range T {
+		PrintFileName(ok)
+	}
 	fmt.Println()
 	fmt.Println()
 
