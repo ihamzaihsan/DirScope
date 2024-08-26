@@ -1,10 +1,7 @@
 package main
 
-// TODO:
-// - Adjust the print in the long listing and other places if needed (Not sure if it is important)
-
 // FIXME:
-// - Fix the -l flag (1- The adjesment)
+// - Fix the normal ls with no flags
 
 // Allowed imports:
 // "fmt"
@@ -19,6 +16,7 @@ package main
 // "io/fs"
 
 import (
+	"fmt"
 	"os"
 
 	RUN "ok/my_ls/PGK"
@@ -53,8 +51,20 @@ func main() {
 		paths = MyLine
 	}
 
+	paths = RUN.CheckPathsExist(paths)
+
+	NewFileSlice, paths := RUN.TestFile(paths)
+
+	RUN.PrintFiles(NewFileSlice, longListing, reverse, sortByTime)
+
+	// RUN.SortByName(NewFileSlice)
+
+	// fmt.Println("The fils only:", NewFileSlice)
+	
+
 	// Iterate through each specified path
 	for _, path := range paths {
-		RUN.HandlePath(path, longListing, recursive, allFiles, reverse, sortByTime)
+		RUN.HandlePath(paths, path, longListing, recursive, allFiles, reverse, sortByTime)
+		fmt.Println()
 	}
 }

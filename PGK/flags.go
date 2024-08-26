@@ -12,7 +12,10 @@ func ParseFlags(MyLine []string) ([]string, bool, bool, bool, bool, bool) {
 		if arg == "--l" {
 			MyLine = RemoveFromSlice(MyLine, "--l")
 			continue
-		}
+		} else if arg == "-" {
+			fmt.Printf("ls: cannot access '-': No such file or directory ")
+			os.Exit(1)
+		} 
 		switch arg {
 		case "-l":
 			longListing = true
@@ -30,7 +33,7 @@ func ParseFlags(MyLine []string) ([]string, bool, bool, bool, bool, bool) {
 			sortByTime = true
 			MyLine = RemoveFromSlice(MyLine, "-t")
 		default:
-			 if strings.HasPrefix(arg, "--") {
+			if strings.HasPrefix(arg, "--") {
 				fmt.Printf("my_ls: invalid option '%s'\n", arg)
 				fmt.Println("Try 'my_ls --help' for more information.")
 				os.Exit(1)
@@ -53,7 +56,7 @@ func ParseFlags(MyLine []string) ([]string, bool, bool, bool, bool, bool) {
 
 					} else if ok == 't' {
 						sortByTime = true
-						
+
 					} else {
 						fmt.Printf("my_ls: invalid option '%s'\n", string(ok))
 						fmt.Println("Try 'my_ls --help' for more information.")
@@ -66,19 +69,6 @@ func ParseFlags(MyLine []string) ([]string, bool, bool, bool, bool, bool) {
 
 		}
 	}
-	// for _, arg := range MyLine {
-		// if strings.HasPrefix(arg, "-") {
-	// 		fmt.Printf("my_ls: invalid option '%s'\n", arg)
-	// 		fmt.Println("Try 'my_ls --help' for more information.")
-	// 		os.Exit(1)
-	// 	}
-	// }
-
-	// if strings.HasPrefix(arg, "---") {
-	// 	fmt.Printf("my_ls: invalid option '%s'\n", arg)
-	// 	fmt.Println("Try 'my_ls --help' for more information.")
-	// 	os.Exit(1)
-	// }
 	return MyLine, longListing, recursive, allFiles, reverse, sortByTime
 }
 
@@ -92,9 +82,9 @@ func RemoveFromSlice(slice []string, s string) []string {
 	return result
 }
 
-func replaceDoubleDash(statement string) string {
-    if strings.HasPrefix(statement, "--") {
-        return "-" + statement[2:] // Replace "--" with "-"
-    }
-    return statement
-}
+// func replaceDoubleDash(statement string) string {
+// 	if strings.HasPrefix(statement, "--") {
+// 		return "-" + statement[2:] // Replace "--" with "-"
+// 	}
+// 	return statement
+// }
