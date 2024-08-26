@@ -12,7 +12,10 @@ func ParseFlags(MyLine []string) ([]string, bool, bool, bool, bool, bool) {
 		if arg == "--l" {
 			MyLine = RemoveFromSlice(MyLine, "--l")
 			continue
-		}
+		} else if arg == "-" {
+			fmt.Printf("ls: cannot access '-': No such file or directory ")
+			os.Exit(1)
+		} 
 		switch arg {
 		case "-l":
 			longListing = true

@@ -14,6 +14,8 @@ func HandlePath(paths []string, path string, longListing, recursive, allFiles, r
 		return
 	}
 
+	
+
 	// Open the directory
 	dir, err := os.Open(path)
 	if err != nil {
