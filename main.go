@@ -5,6 +5,9 @@ package main
 
 // FIXME:
 // - 
+// the alaiment of the output with color and -l
+// -R
+
 
 // Allowed imports:
 // "fmt"
