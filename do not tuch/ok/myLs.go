@@ -3,6 +3,7 @@ package RUN
 import (
 	"fmt"
 	"os"
+
 	// "os/user"
 	"strings"
 	"syscall"
@@ -10,10 +11,9 @@ import (
 
 var (
 	longListing bool
-	reverse bool
-	MyLine []string
+	reverse     bool
+	MyLine      []string
 )
-
 
 // ANSI color codes
 const (
@@ -110,16 +110,16 @@ func HandleLongListing(files []os.FileInfo, path string) {
 
 	}
 
-// 	fmt.Printf("%s %*d %-*s %-*s %*d %s ",
-// 	file.Mode().String(),
-// 	nlinkWidth, stat.Nlink,
-// 	userWidth, userName(),
-// 	groupWidth, groupName(),
-// 	sizeWidth, file.Size(),
-// 	file.ModTime().Format("Jan 2 15:04"),
-// )
-// PrintFileName(file)
-// fmt.Println()
+	// 	fmt.Printf("%s %*d %-*s %-*s %*d %s ",
+	// 	file.Mode().String(),
+	// 	nlinkWidth, stat.Nlink,
+	// 	userWidth, userName(),
+	// 	groupWidth, groupName(),
+	// 	sizeWidth, file.Size(),
+	// 	file.ModTime().Format("Jan 2 15:04"),
+	// )
+	// PrintFileName(file)
+	// fmt.Println()
 }
 
 func HandleRecursive(path string, longListing, allFiles, reverse, sortByTime bool) {
@@ -221,7 +221,6 @@ func HandleReverse(files []os.FileInfo) {
 // 		fmt.Print(file.Name(), "  ")
 // 	}
 // }
-
 
 // func PrintFileName(file os.FileInfo) {
 // 	// Check if the file is a directory
