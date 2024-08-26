@@ -14,8 +14,6 @@ func HandlePath(paths []string, path string, longListing, recursive, allFiles, r
 		return
 	}
 
-	
-
 	// Open the directory
 	dir, err := os.Open(path)
 	if err != nil {
@@ -56,7 +54,7 @@ func HandlePath(paths []string, path string, longListing, recursive, allFiles, r
 
 	// Print files in long listing format if the -l flag is specified
 	if longListing && !recursive {
-		HandleLongListing(fileInfos, path)
+		HandleLongListing(fileInfos, true)
 	} else if recursive {
 		// Recursively list subdirectories if the -R flag is specified
 		HandleRecursive(path, longListing, allFiles, reverse, sortByTime)
@@ -65,9 +63,9 @@ func HandlePath(paths []string, path string, longListing, recursive, allFiles, r
 		if len(paths) > 1 {
 			for _, file := range fileInfos {
 				if file.IsDir() {
-				// PrintFileName(file)
+					// PrintFileName(file)
 
-					fmt.Println(file.Name(),":")
+					fmt.Println(file.Name(), ":")
 				}
 				PrintFileName(file)
 			}
@@ -81,7 +79,6 @@ func HandlePath(paths []string, path string, longListing, recursive, allFiles, r
 
 	// fmt.Println() // Print a new line after listing files
 }
-
 
 // CheckPathsExist checks if each path in the list exists and removes non-existing ones.
 func CheckPathsExist(paths []string) []string {
@@ -97,3 +94,4 @@ func CheckPathsExist(paths []string) []string {
 
 	return validPaths
 }
+

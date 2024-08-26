@@ -53,6 +53,15 @@ func main() {
 
 	paths = RUN.CheckPathsExist(paths)
 
+	NewFileSlice, paths := RUN.TestFile(paths)
+
+	RUN.PrintFiles(NewFileSlice, longListing, reverse, sortByTime)
+
+	// RUN.SortByName(NewFileSlice)
+
+	// fmt.Println("The fils only:", NewFileSlice)
+	
+
 	// Iterate through each specified path
 	for _, path := range paths {
 		RUN.HandlePath(paths, path, longListing, recursive, allFiles, reverse, sortByTime)
