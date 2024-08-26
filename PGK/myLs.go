@@ -46,7 +46,7 @@ func SortByName(fileInfos []os.FileInfo) {
 }
 
 // handleLongListing prints files in a long listing format
-func HandleLongListing(files []os.FileInfo, path string) {
+func HandleLongListing(files []os.FileInfo, TheTotal bool) {
 	totalBlocks, err := CalculateTotalBlocks(files)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -55,12 +55,15 @@ func HandleLongListing(files []os.FileInfo, path string) {
 
 	var num int64
 
-	for _, f := range files {
-		stat := f.Sys().(*syscall.Stat_t)
-		num = num + stat.Blocks
+	if TheTotal {
+		for _, f := range files {
+			stat := f.Sys().(*syscall.Stat_t)
+			num = num + stat.Blocks
+		}
+	
+		fmt.Println("total", totalBlocks)
 	}
 
-	fmt.Println("total", totalBlocks)
 
 	// currentUser, err := user.Current()
 	// if err != nil {
@@ -167,7 +170,7 @@ func HandleRecursive(path string, longListing, allFiles, reverse, sortByTime boo
 
 		// Print the files in long listing format if the flag is set
 		if longListing {
-			HandleLongListing(dirFileInfos, path)
+			HandleLongListing(dirFileInfos, true)
 		} else {
 			for _, file := range dirFileInfos {
 				PrintFileName(file)

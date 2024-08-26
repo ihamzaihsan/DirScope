@@ -55,25 +55,12 @@ func main() {
 
 	NewFileSlice, paths := RUN.TestFile(paths)
 
+	RUN.PrintFiles(NewFileSlice, longListing, reverse, sortByTime)
+
 	// RUN.SortByName(NewFileSlice)
 
 	// fmt.Println("The fils only:", NewFileSlice)
-	var T []os.FileInfo
-	for _, file := range NewFileSlice {
-		// Get the FileInfo for the provided path
-		info, err := os.Stat(file)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		T = append(T, info)
-	}
-	RUN.SortByName(T)
-	for _, ok := range T {
-		RUN.PrintFileName(ok)
-	}
-	fmt.Println()
-	fmt.Println()
+	
 
 	// Iterate through each specified path
 	for _, path := range paths {

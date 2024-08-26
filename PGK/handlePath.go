@@ -54,7 +54,7 @@ func HandlePath(paths []string, path string, longListing, recursive, allFiles, r
 
 	// Print files in long listing format if the -l flag is specified
 	if longListing && !recursive {
-		HandleLongListing(fileInfos, path)
+		HandleLongListing(fileInfos, true)
 	} else if recursive {
 		// Recursively list subdirectories if the -R flag is specified
 		HandleRecursive(path, longListing, allFiles, reverse, sortByTime)
@@ -95,23 +95,3 @@ func CheckPathsExist(paths []string) []string {
 	return validPaths
 }
 
-func IsFile(path string) bool {
-	info, err := os.Stat(path)
-	if err != nil {
-		// If there's an error, return false
-		return false
-	}
-	return info.Mode().IsRegular()
-}
-
-func TestFile(paths []string) ([]string, []string) {
-	var NewFileSlice []string
-	for _, path := range paths {
-		if IsFile(path) {
-			NewFileSlice = append(NewFileSlice, path)
-			paths = RemoveFromSlice(paths, path)
-		}
-	}
-	return NewFileSlice, paths
-
-}
