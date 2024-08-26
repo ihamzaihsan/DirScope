@@ -19,6 +19,7 @@ const (
 	Blue  = "\033[34m"
 	Green = "\033[32m"
 	Reset = "\033[0m"
+	Yellow = "\033[33m"
 )
 
 // SortByModTime sorts files and folders by modification time, with the newest first.
@@ -212,7 +213,15 @@ func PrintFileName(file os.FileInfo) {
 		fmt.Printf("%s%s%s/%s  ", Blue, file.Name(), Reset, Reset)
 	} else if strings.HasSuffix(file.Name(), ".exe") {
 		fmt.Printf("%s%s%s*%s  ", Green, file.Name(), Reset, Reset)
-	} else {
+	} else if strings.HasSuffix(file.Name(), ".sample") {
+		fmt.Printf("%s%s%s  ", Green, file.Name(), Reset)
+	} else if file.Mode()&os.ModeSocket != 0 {
+		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
+	} else if file.Mode()&os.ModeNamedPipe != 0 {
+		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
+	} else if file.Mode()&os.ModeCharDevice != 0 {
+		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
+	}  else {
 		fmt.Print(file.Name(), "  ")
 	}
 }
