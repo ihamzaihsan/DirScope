@@ -1,7 +1,10 @@
 package main
 
+//TODO:
+// - 
+
 // FIXME:
-// - Fix the normal ls with no flags
+// - 
 
 // Allowed imports:
 // "fmt"
