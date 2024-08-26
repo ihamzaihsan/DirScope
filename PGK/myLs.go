@@ -20,6 +20,7 @@ const (
 	Green = "\033[32m"
 	Reset = "\033[0m"
 	Yellow = "\033[33m"
+	Cryan = "\033[36m"
 )
 
 // SortByModTime sorts files and folders by modification time, with the newest first.
@@ -224,7 +225,13 @@ func PrintFileName(file os.FileInfo) {
 		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
 	} else if file.Mode()&os.ModeCharDevice != 0 {
 		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
-	}  else {
+	}  else if file.Mode()&os.ModeSymlink != 0 {
+		fmt.Printf("%s%s%s  ", Cryan, file.Name(), Reset)
+	}  else if file.Mode()& 01111 != 0 {
+		fmt.Printf("%s%s%s  ", Green, file.Name(), Reset)
+	}  else if file.Mode()&os.ModeDevice != 0 {
+		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
+	} else {
 		fmt.Print(file.Name(), "  ")
 	}
 }
