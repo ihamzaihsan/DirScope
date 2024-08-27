@@ -11,17 +11,17 @@ import (
 
 var (
 	longListing bool
-	reverse bool
-	MyLine []string
+	reverse     bool
+	MyLine      []string
 )
 
 // ANSI escape codes for colors
 const (
-	Blue  = "\033[34m"
-	Green = "\033[32m"
-	Reset = "\033[0m"
+	Blue   = "\033[34m"
+	Green  = "\033[32m"
+	Reset  = "\033[0m"
 	Yellow = "\033[33m"
-	Cryan = "\033[36m"
+	Cryan  = "\033[36m"
 )
 
 // SortByModTime sorts files and folders by modification time, with the newest first.
@@ -63,10 +63,9 @@ func HandleLongListing(files []os.FileInfo, TheTotal bool) {
 			stat := f.Sys().(*syscall.Stat_t)
 			num = num + stat.Blocks
 		}
-	
+
 		fmt.Println("total", totalBlocks)
 	}
-
 
 	// currentUser, err := user.Current()
 	// if err != nil {
@@ -83,7 +82,7 @@ func HandleLongListing(files []os.FileInfo, TheTotal bool) {
 	// Calculate max widths for columns
 	nlinkWidth, userWidth, groupWidth, sizeWidth := CalculateMaxWidths(files)
 
-	//FIXME: the ajecment
+	// FIXME: the ajecment
 	for _, file := range files {
 		stat := file.Sys().(*syscall.Stat_t)
 
@@ -106,21 +105,30 @@ func HandleLongListing(files []os.FileInfo, TheTotal bool) {
 			sizeWidth, file.Size(),
 			file.ModTime().Format("Jan 2 15:04"),
 		)
-		PrintFileName(file)
-		fmt.Println()
 
+		if file.Mode()&os.ModeSymlink != 0 {
+			linkPath, err := os.Readlink(file.Name())
+			if err == nil {
+				fmt.Printf("%s -> %s\n", file.Name(), linkPath)
+			} else {
+				fmt.Printf("%s\n", file.Name())
+			}
+		} else {
+			fmt.Printf("%s\n", file.Name())
+		}
 	}
 
-// 	fmt.Printf("%s %*d %-*s %-*s %*d %s ",
-// 	file.Mode().String(),
-// 	nlinkWidth, stat.Nlink,
-// 	userWidth, userName(),
-// 	groupWidth, groupName(),
-// 	sizeWidth, file.Size(),
-// 	file.ModTime().Format("Jan 2 15:04"),
-// )
-// PrintFileName(file)
-// fmt.Println()
+	//	fmt.Printf("%s %*d %-*s %-*s %*d %s ",
+	//	file.Mode().String(),
+	//	nlinkWidth, stat.Nlink,
+	//	userWidth, userName(),
+	//	groupWidth, groupName(),
+	//	sizeWidth, file.Size(),
+	//	file.ModTime().Format("Jan 2 15:04"),
+	//
+	// )
+	// PrintFileName(file)
+	// fmt.Println()
 }
 
 func HandleRecursive(path string, longListing, allFiles, reverse, sortByTime bool) {
@@ -214,7 +222,14 @@ func HandleReverse(files []os.FileInfo) {
 
 // printFileName prints the file name, coloring directories blue, .exe files green, and adding a backslash or asterisk at the end
 func PrintFileName(file os.FileInfo) {
-	if file.IsDir() {
+	if file.Mode()&os.ModeSymlink != 0 {
+		linkPath, err := os.Readlink(file.Name())
+		if err == nil {
+			fmt.Printf("%s%s%s -> %s  ", Cryan, file.Name(), Reset, linkPath)
+		} else {
+			fmt.Printf("%s%s%s  ", Cryan, file.Name(), Reset)
+		}
+	} else if file.IsDir() {
 		fmt.Printf("%s%s%s/%s  ", Blue, file.Name(), Reset, Reset)
 	} else if strings.HasSuffix(file.Name(), ".exe") {
 		fmt.Printf("%s%s%s*%s  ", Green, file.Name(), Reset, Reset)
@@ -226,11 +241,9 @@ func PrintFileName(file os.FileInfo) {
 		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
 	} else if file.Mode()&os.ModeCharDevice != 0 {
 		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
-	}  else if file.Mode()&os.ModeSymlink != 0 {
-		fmt.Printf("%s%s%s  ", Cryan, file.Name(), Reset)
-	}  else if file.Mode()& 01111 != 0 {
+	} else if file.Mode()&0o1111 != 0 {
 		fmt.Printf("%s%s%s  ", Green, file.Name(), Reset)
-	}  else if file.Mode()&os.ModeDevice != 0 {
+	} else if file.Mode()&os.ModeDevice != 0 {
 		fmt.Printf("%s%s%s  ", Yellow, file.Name(), Reset)
 	} else {
 		fmt.Print(file.Name(), "  ")
