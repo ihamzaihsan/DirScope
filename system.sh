@@ -16,7 +16,7 @@ mkdir $TEST_DIR/-
 run_test_case() {
     echo -e "\nRunning test case: $1"
     echo "Command: ls ${@:2}"
-    ls "${@:2}"
+    ./my-ls-1 "${@:2}"
     echo "Press Enter to continue..."
     read
     clear

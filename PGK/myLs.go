@@ -105,13 +105,13 @@ func HandleLongListing(files []os.FileInfo, TheTotal bool) {
 			sizeWidth, file.Size(),
 			file.ModTime().Format("Jan 2 15:04"),
 		)
-
-		if file.Mode()&os.ModeSymlink != 0 {
-			linkPath, err := os.Readlink(file.Name())
-			if err == nil {
-				fmt.Printf("%s -> %s\n", file.Name(), linkPath)
-			} else {
-				fmt.Printf("%s\n", file.Name())
+			if file.Mode()&os.ModeSymlink != 0 {
+				target, err := GetSym(filepath.Join(path, file.Name()))
+				if err == nil {
+					fmt.Printf("%s -> %s\n", file.Name(), target)
+				} else {
+					fmt.Printf("%s\n", file.Name())
+				}
 			}
 		} else {
 			fmt.Printf("%s\n", file.Name())
@@ -248,4 +248,12 @@ func PrintFileName(file os.FileInfo) {
 	} else {
 		fmt.Print(file.Name(), "  ")
 	}
+}
+
+func GetSym(path string) (string, error) {
+	target, err := os.Readlink(path)
+	if err != nil {
+		return "", err
+	}
+	return target, nil
 }
